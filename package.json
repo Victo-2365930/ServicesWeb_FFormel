@@ -1,21 +1,29 @@
 {
-  "name": "exercice03",
+  "name": "formatifformel",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Victo-2365930/ServicesWeb_FFormel.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Victo-2365930/ServicesWeb_FFormel/issues"
+  },
+  "homepage": "https://github.com/Victo-2365930/ServicesWeb_FFormel#readme",
   "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
   }
 }
