@@ -1,7 +1,7 @@
 // Importer le module express
 import express from 'express';
 
-// Importer morgan
+// Importer morgan (À intégrer avec la doc)
 import morgan from 'morgan';
 
 // Importer le fichier de router du fichier salutations.route
