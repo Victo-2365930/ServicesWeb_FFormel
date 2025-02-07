@@ -1,24 +1,81 @@
-const salutations = [
-    { code_langue : "fr", langue : "Français", message : "Bonjour le monde"},
-    { code_langue : "fr", langue : "Français", message : "Bon matin"},
-    { code_langue : "fr", langue : "Français", message : "Salut"},
-    { code_langue : "fr", langue : "Français", message : "Bonne nuit je vais travailler"},
-    { code_langue : "en", langue : "Anglais", message : "Hello world"},
-    { code_langue : "en", langue : "Anglais", message : "Good morning"},
-    { code_langue : "en", langue : "Anglais", message : "Hi"},
-    { code_langue : "en", langue : "Anglais", message : "Good night, i''m going to work"},
-    { code_langue : "es", langue : "Espagnol", message : "Hola Mundo"},
-    { code_langue : "es", langue : "Espagnol", message : "Buenos dias"},
-    { code_langue : "es", langue : "Espagnol", message : "Hola"},
-    { code_langue : "es", langue : "Espagnol", message : "Buenas noches me voy a trabajar"},
-    { code_langue : "de", langue : "Allemand", message : "Hallo Welt"},
-    { code_langue : "de", langue : "Allemand", message : "guten Morgen"},
-    { code_langue : "de", langue : "Allemand", message : "Hallo"},
-    { code_langue : "de", langue : "Allemand", message : "Gute Nacht, ich gehe zur Arbei"}
-];
+import db from '../config/db.js';
 
-function AjouterSalutation(code_langue, langue, message){
-    salutations.push({code_langue, langue, message} )
+
+const ajouterUneSalutation = (code_langue, langue, message) => {
+    return new Promise((resolve, reject) => {
+
+        const requete = 'INSERT INTO salutions(code_langue, langue, message) VALUES(?,?,?)';
+        const params = [code_langue, langue, message]
+
+        db.query(requete, params, (erreur, resultat) => {
+            if(erreur){
+                reject(erreur);
+            }
+            else{
+                resolve(resultat);
+            }
+        })
+    })
 }
 
-export default salutations;
+const listerLesSalutations = () => {
+    return new Promise((resolve, reject) => {
+        const requete = "SELECT code_langue, langue, message FROM salutations";
+
+        db.query(requete, (erreur, resultat) => {
+            if (erreur) {
+                reject(erreur);
+            } else {
+                resolve(resultat);
+            }
+        });
+    });
+}
+
+const envoyerParLangue = (code_langue) =>{
+    return new Promise((resolve, reject) => {
+        
+        const requete = "SELECT message FROM salutations WHERE code_langue = ? ORDER BY RAND() LIMIT 1";
+        const params = [code_langue];
+
+        db.query(requete, params, (erreur, resultat) => {
+            if(erreur){
+                reject(erreur);
+            }
+            else{
+                if (resultat && resultat.length > 0) {
+                    resolve(resultat[0].message);
+                } else {
+                    resolve("Aucun Message trouvé pour cette langue");
+                }
+            }
+        })
+    })
+}
+
+const envoyerSansLangue = () =>{
+    return new Promise((resolve, reject) => {
+        
+        const requete = "SELECT message FROM salutations ORDER BY RAND() LIMIT 1";
+
+        db.query(requete, (erreur, resultat) => {
+            if(erreur){
+                reject(erreur);
+            }
+            else{
+                if (resultat && resultat.length > 0) {
+                    resolve(resultat[0].message);
+                } else {
+                    resolve(null);
+                }
+            }
+        })
+    })
+}
+
+export {
+    ajouterUneSalutation,
+    listerLesSalutations,
+    envoyerParLangue,
+    envoyerSansLangue
+}

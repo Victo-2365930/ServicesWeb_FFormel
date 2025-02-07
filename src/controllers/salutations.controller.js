@@ -1,6 +1,6 @@
 
 // Importer le fichier de router du fichier salutations.route
-import salutations from '../models/salutations.models.js';
+import {ajouterUneSalutation, listerLesSalutations, envoyerParLangue, envoyerSansLangue} from '../models/salutations.models.js';
 
 const AjouterSalutation = (req, res) => {
         const code_langue = req.body.code_langue;
@@ -8,36 +8,38 @@ const AjouterSalutation = (req, res) => {
         const message = req.body.message;
         
         if(!req.body.langue ||!req.body.code_langue || !req.body.message){
-            console.log(" un argument est absent")
+            console.log(" Un argument est absent")
+            res.status(469);
+            res.send("Il doit y avoir 3 arguments: code_langue(ex. fr), langue (ex.francais) et un message(ex. Bonjour)");
         }
         else{
-            ajouterSalutation(req.body.code_langue, req.body.langue, req.body.message)
+            ajouterUneSalutation(req.body.code_langue, req.body.langue, req.body.message)
         }
 }
 
-// Router vers /api/salutations/ sans requête
+//Ne fonctionne pas
 const SalutationLangue = (req, res) => {
         // Récupère les paramètres de la requête ?langue
         const langue = req.query.langue;
     
         if(langue != ""){
-            //insérer dans la constante une salutation random parmis celle contenu dans la langue
-            let salutationFiltre = salutations.filter(salutation => salutation.langue === langue);
-            //Si le tableau filtré est vide: resend 404 langue non supporté
-                let indexAleatoire = Math.floor(Math.random() * salutationFiltre.length)
                 res.status(200);
-                res.send(salutationFiltre[indexAleatoire].message);
+                res.send(envoyerParLangue(langue));
             }
-            //Envoyer une salutation aléatoire dans la langue
         else{
-            res.status(404);
-            res.send("Langue non supporté. Entrez exemple: fr");
+            res.send(envoyerSansLangue());
         };
 }
 
+//Merci Chatgpt pour le .then et .catch
 const ListerSalutation = (req, res) => {
-        res.status(200);
-        res.send(JSON.stringify(salutations));
+    listerLesSalutations()
+        .then(salutations => {
+            res.status(200).json(salutations); // Envoi des salutations en JSON
+        })
+        .catch(erreur => {
+            res.status(500).json({ message: "Erreur lors de la récupération des salutations", erreur });
+        });
 }
 
 
