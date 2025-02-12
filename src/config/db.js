@@ -11,3 +11,5 @@ const pool = mysql.createPool({
 });
 
 export default pool;
+
+//Refaire les re.status(400).send

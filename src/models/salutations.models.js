@@ -53,24 +53,23 @@ const envoyerParLangue = (code_langue) =>{
     })
 }
 
-const envoyerSansLangue = () =>{
+const envoyerSansLangue = () => {
     return new Promise((resolve, reject) => {
         
         const requete = "SELECT message FROM salutations ORDER BY RAND() LIMIT 1";
 
         db.query(requete, (erreur, resultat) => {
-            if(erreur){
+            if (erreur) {
                 reject(erreur);
-            }
-            else{
+            } else {
                 if (resultat && resultat.length > 0) {
                     resolve(resultat[0].message);
                 } else {
                     resolve(null);
                 }
             }
-        })
-    })
+        });
+    });
 }
 
 export {
